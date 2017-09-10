@@ -1,0 +1,83 @@
+<div class="header">
+  <div class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#/">challenge</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="active" style="width: 200px">
+            <div class="form-group" style="margin: 7px 0;">
+              <input type="text" class="form-control" ng-model="filter.text" placeholder="search your desire plan">
+            </div>
+          </li>
+          <li class="active" style="width: 150px">
+            <div class="form-group" style="margin: 7px 5px;">
+              <select class="form-control" ng-model="filter.orderBy">
+                <option label="low to high" value=""></option>
+                <option label="high to low" value="-"></option>
+              </select>
+            </div>
+          </li>
+          <li class="active" style="width: 180px">
+            <div class="form-group" style="margin: 7px 5px;">
+              <select class="form-control" ng-model="filter.insuranceType"
+                      ng-options="item.insurance_type as item.insurance_type for item in insurances">
+                <option style="display: none" label="insurance type" value=""></option>
+              </select>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row text-center">
+    <div class="col-md-4"
+         ng-repeat="insurance in tempDataHolder =
+         (insurances | filter: filter.text || filter.insuranceType | orderBy: (filter.orderBy + 'premium') )">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title" ng-bind="insurance.product_name = insurance.provider['en-ae'].product_name"></h3>
+        </div>
+        <div class="panel-body remove-padding">
+          <div class="the-price text-center">
+            <h1 class="">
+              <span class="badge" ng-bind="insurance.currency">$</span>
+              <span class="price" ng-bind="insurance.premium">10</span>
+              <span class="subscript">/mo</span>
+            </h1>
+            <small>1 month FREE trial</small>
+          </div>
+          <table class="table" style="margin-bottom: 0">
+            <tbody>
+            <tr>
+              <td>
+                <p>
+                  {{insurance.provider['en-ae'].description | limitTo: 99}} ...
+                </p>
+              </td>
+            </tr>
+            <tr class="text-center item-row" ng-repeat="item in insurance.covers track by $index">
+              <td>
+                <span ng-bind="item.name"></span>
+                <span class="glyphicon" ng-class="{
+                      'glyphicon-ok': item.selected == false,
+                      'glyphicon-remove': item.selected == undefined
+                }"></span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="filter.text.length && !tempDataHolder.length">
+      <div class="alert alert-warning">
+        No such plan is available now.
+      </div>
+    </div>
+  </div>
+</div>
